@@ -8,6 +8,9 @@ package io.muic.ooc.webapp.service;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
+import com.mysql.jdbc.exceptions.MySQLDataException;
+import io.muic.ooc.webapp.mysql.MySql;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -15,22 +18,21 @@ import org.apache.commons.lang.StringUtils;
  * @author gigadot
  */
 public class SecurityService {
+
+    private MySql mySql= new MySql();
     
-    private Map<String, String> userCredentials = new HashMap<String, String>() {{
-        put("admin", "123456");
-        put("muic", "1111");
-    }};
-    
-    public boolean isAuthorized(HttpServletRequest request) {
+    public boolean isAuthorized(HttpServletRequest request)  throws Exception {
         String username = (String) request.getSession()
                 .getAttribute("username");
-        // do checking
-       return (username != null && userCredentials.containsKey(username));
-    }
+
+
+        return username != null && mySql.checkIfUserExist(username);}
+
+
     
-    public boolean authenticate(String username, String password, HttpServletRequest request) {
-        String passwordInDB = userCredentials.get(username);
-        boolean isMatched = StringUtils.equals(password, passwordInDB);
+    public boolean authenticate(String username, String password, HttpServletRequest request) throws Exception {
+
+        boolean isMatched = mySql.validateLogin(username,password);
         if (isMatched) {
             request.getSession().setAttribute("username", username);
             return true;
@@ -38,6 +40,8 @@ public class SecurityService {
             return false;
         }
     }
+
+
     
     public void logout(HttpServletRequest request) {
         request.getSession().invalidate();

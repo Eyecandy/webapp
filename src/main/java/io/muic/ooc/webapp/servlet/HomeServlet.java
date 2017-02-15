@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author gigadot
  */
-public class HomeServlet extends HttpServlet {
 
+public class HomeServlet extends HttpServlet {
     private SecurityService securityService;
 
     public void setSecurityManager(SecurityService securityService) {
@@ -27,13 +27,30 @@ public class HomeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
         boolean authorized = securityService.isAuthorized(request);
         if (authorized) {
             // do MVC in here
+
             RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/home.jsp");
+            String username = (String) request.getSession().getAttribute("username");
+
+            request.setAttribute("info", "logged in as "+ username);
+
             rd.include(request, response);
         } else {
             response.sendRedirect("/login");
-        }
+        }}
+        catch (Exception e) {}
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/addUser.jsp");
+        rd.include(req, resp);
+    }
+
+
+
+
 }

@@ -6,22 +6,23 @@
 package io.muic.ooc.webapp.servlet;
 
 import io.muic.ooc.webapp.service.SecurityService;
+
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
  * @author gigadot
  */
 public class LoginServlet extends HttpServlet {
 
     private SecurityService securityService;
-
+    String username;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/login.jsp");
@@ -32,22 +33,27 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // do login post logic
         // extract username and password from request
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
-            if (securityService.authenticate(username, password, request)) {
-                response.sendRedirect("/");
+        try {
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
+                if (securityService.authenticate(username, password, request)) {
+
+                    response.sendRedirect("/");
+                } else {
+                    String error = "Wrong username or password.";
+                    request.setAttribute("error", error);
+                    RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/login.jsp");
+                    rd.include(request, response);
+                }
             } else {
-                String error = "Wrong username or password.";
+                String error = "Username or password is missing.";
                 request.setAttribute("error", error);
                 RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/login.jsp");
                 rd.include(request, response);
             }
-        } else {
-            String error = "Username or password is missing.";
-            request.setAttribute("error", error);
-            RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/login.jsp");
-            rd.include(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // check username and password against database
@@ -58,5 +64,11 @@ public class LoginServlet extends HttpServlet {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+    private void setUsername(String username) {
+        this.username = username;
+    }
+    protected String getUsername(){
+        return  username;
     }
 }

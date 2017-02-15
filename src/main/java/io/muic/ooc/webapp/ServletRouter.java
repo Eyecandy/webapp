@@ -7,7 +7,9 @@ package io.muic.ooc.webapp;
 
 import io.muic.ooc.webapp.servlet.HomeServlet;
 import io.muic.ooc.webapp.service.SecurityService;
+import io.muic.ooc.webapp.servlet.LogOutServlet;
 import io.muic.ooc.webapp.servlet.LoginServlet;
+import io.muic.ooc.webapp.servlet.UserServlet;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 
@@ -26,6 +28,9 @@ public class ServletRouter {
     public void init(Context ctx) {
         initHome(ctx);
         initLogin(ctx);
+        initAddUser(ctx);
+        initLogOut(ctx);
+
     }
 
     private void initHome(Context ctx) {
@@ -41,4 +46,18 @@ public class ServletRouter {
         Tomcat.addServlet(ctx, "LoginServlet", loginServlet);
         ctx.addServletMapping("/login", "LoginServlet");
     }
+    private void initAddUser(Context ctx) {
+        UserServlet userServlet = new UserServlet();
+        userServlet.setSecurityService(securityService);
+        Tomcat.addServlet(ctx, "UserServlet", userServlet);
+        ctx.addServletMapping("/addUser", "UserServlet");
+    }
+    private void initLogOut(Context ctx) {
+        LogOutServlet logOutServlet = new LogOutServlet();
+        logOutServlet.setSecurityService(securityService);
+        Tomcat.addServlet(ctx,"LogOutServlet",logOutServlet);
+        ctx.addServletMapping("/logout","LogOutServlet");
+    }
+
+
 }
