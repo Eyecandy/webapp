@@ -13,10 +13,7 @@ import com.mysql.jdbc.exceptions.MySQLDataException;
 import io.muic.ooc.webapp.mysql.MySql;
 import org.apache.commons.lang.StringUtils;
 
-/**
- *
- * @author gigadot
- */
+
 public class SecurityService {
 
     private MySql mySql= new MySql();
@@ -24,7 +21,6 @@ public class SecurityService {
     public boolean isAuthorized(HttpServletRequest request)  throws Exception {
         String username = (String) request.getSession()
                 .getAttribute("username");
-
 
         return username != null && mySql.checkIfUserExist(username);}
 

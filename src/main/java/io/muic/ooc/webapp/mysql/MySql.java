@@ -1,6 +1,8 @@
 package io.muic.ooc.webapp.mysql;
 
 
+        import org.apache.commons.lang.StringUtils;
+
         import java.sql.*;
         import java.util.ArrayList;
 
@@ -54,8 +56,8 @@ public class MySql{
         return false;
     };
 
-    public void addSession(String username) throws  Exception {
-        String sql = "UPDATE test.users set session=1 where username="+"'"+username+"'";
+    public void editUser(String oldUserName,String newUserName) throws  Exception {
+        String sql = "UPDATE test.users set username='"+newUserName+"' where username="+"'"+oldUserName+"'";
         System.out.println(sql);
         preparedStatement = connection.prepareStatement(sql);
         preparedStatement.executeUpdate();
@@ -94,13 +96,14 @@ public class MySql{
     public boolean checkIfUserExist(String username) throws  Exception{
         while (resultSet.next()) {
             String exisingUserName = resultSet.getString("username");
-            if (username.equals(exisingUserName)) {
+
+            if (StringUtils.equals(exisingUserName,username)) {
                 resultSet.beforeFirst();
-                System.out.println("Found");
+                System.out.println("Found" + username);
                 return true;
             }
         }
-        //resultSet.beforeFirst();
+
         return false;
     }
     private void close() {

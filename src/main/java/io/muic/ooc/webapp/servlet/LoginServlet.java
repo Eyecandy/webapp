@@ -22,7 +22,6 @@ import org.apache.commons.lang.StringUtils;
 public class LoginServlet extends HttpServlet {
 
     private SecurityService securityService;
-    String username;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("WEB-INF/login.jsp");
@@ -31,14 +30,11 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // do login post logic
-        // extract username and password from request
         try {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
                 if (securityService.authenticate(username, password, request)) {
-
                     response.sendRedirect("/");
                 } else {
                     String error = "Wrong username or password.";
@@ -56,19 +52,10 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        // check username and password against database
-        // if valid then set username attribute to session via securityService
-        // else put error message to render error on the login form
-
     }
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
-    private void setUsername(String username) {
-        this.username = username;
-    }
-    protected String getUsername(){
-        return  username;
-    }
+
 }

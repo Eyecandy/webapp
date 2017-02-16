@@ -5,10 +5,7 @@
  */
 package io.muic.ooc.webapp.service;
 
-/**
- *
- * @author gigadot
- */
+
 public class UserService {
     
 }

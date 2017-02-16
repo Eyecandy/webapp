@@ -29,7 +29,6 @@ public class UserServlet extends HttpServlet {
         RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/addUser.jsp");
         rd.include(req, resp);
     }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
@@ -45,7 +44,8 @@ public class UserServlet extends HttpServlet {
                 boolean userNameExist = false;
                 ArrayList<String> resultSet = MyJspHelper.getResultSetAsArray();
                 for (int i =0;i < resultSet.size();i++) {
-                    if (StringUtils.equals(username.toLowerCase(),resultSet.get(i).toLowerCase())) {
+                    String userFromDB= resultSet.get(i);
+                    if (StringUtils.equals(username.toLowerCase(),userFromDB.toLowerCase())) {
                         userNameExist = true;
                     }
                 }
@@ -57,67 +57,17 @@ public class UserServlet extends HttpServlet {
                 }
                 else {
                     mysql.addUser(username,password);
-                    RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/home.jsp");
-                    rd.include(req, resp);}
-
-
-
-
+                    resp.sendRedirect("/index.jsp");
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
-
-
     }
-
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
-
-
-
-
-
-
-
-
-
-
-
-//    MySql mySql = new MySql();
-//    String message;
-//    public void addUser(String currUser,String username, String password) throws Exception {
-//        int zeroOrError = 2;
-//        ArrayList<String> resultSetAsArray = MyJspHelper.getResultSetAsArray();
-//        for (int i = 0 ;i < resultSetAsArray.size();i++) {
-//            if (username.equals(resultSetAsArray.get(i))) {
-//                zeroOrError = 1;
-//            }
-//            if (currUser.equals(username)) {zeroOrError = 0;}
-//        }
-//
-//        if (zeroOrError == 0) {
-//            mySql.addUser(username,password);
-//            message = "User added succesfully";
-//        }
-//        else if (zeroOrError == 1) {
-//            message = "That username already exists in userList";
-//
-//        }
-//        else {
-//            message = currUser + " is not eligble to add new users";
-//
-//        }
-//
-//
-//
-//
-//
-//    }
 
     
 }

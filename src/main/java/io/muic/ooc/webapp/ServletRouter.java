@@ -5,11 +5,8 @@
  */
 package io.muic.ooc.webapp;
 
-import io.muic.ooc.webapp.servlet.HomeServlet;
+import io.muic.ooc.webapp.servlet.*;
 import io.muic.ooc.webapp.service.SecurityService;
-import io.muic.ooc.webapp.servlet.LogOutServlet;
-import io.muic.ooc.webapp.servlet.LoginServlet;
-import io.muic.ooc.webapp.servlet.UserServlet;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 
@@ -30,9 +27,9 @@ public class ServletRouter {
         initLogin(ctx);
         initAddUser(ctx);
         initLogOut(ctx);
-
+        initRemoveUse(ctx);
+        initEditUser(ctx);
     }
-
     private void initHome(Context ctx) {
         HomeServlet homeServlet = new HomeServlet();
         homeServlet.setSecurityManager(securityService);
@@ -59,5 +56,17 @@ public class ServletRouter {
         ctx.addServletMapping("/logout","LogOutServlet");
     }
 
+    private void initRemoveUse(Context ctx) {
+        RemoveUserServlet removeUserServlet = new RemoveUserServlet();
+        removeUserServlet.setSecurityService(securityService);
+        Tomcat.addServlet(ctx,"RemoveUserServlet",removeUserServlet);
+        ctx.addServletMapping("/removeUser","RemoveUserServlet");
+    }
+    private void initEditUser(Context ctx) {
+        EditUserServlet editUserServlet = new EditUserServlet();
+        editUserServlet.setSecurityService(securityService);
+        Tomcat.addServlet(ctx,"EditUserServlet",editUserServlet);
+        ctx.addServletMapping("/editUser","EditUserServlet");
+    }
 
 }

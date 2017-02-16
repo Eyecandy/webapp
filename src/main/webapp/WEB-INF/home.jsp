@@ -3,6 +3,8 @@
 <%@ page import="java.sql.ResultSet" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
          pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 
 <html>
 <body>
@@ -10,15 +12,18 @@
 <p>${info}</p>
 
     <a href="/addUser">addUser</a>
+    <a href="/editUser">editU ser</a>
     <ul>
-        <% ResultSet resultSet = MyJspHelper.getResultSet(); %>
-    <%while (resultSet.next())  { %>
-        <li><%=resultSet.getString("username")  %>  <button type="button">remove</button>  </li>
-        <li><%= "---------------------------- "%>  </li>
-    <%}%>
+        <ul>
+            <c:forEach items="${myMap}" var="value">
+                <li><c:out value="${value}"/><form action="/removeUser" method="get">
+                    <input type="hidden" name="username" value=${value}>
+                    <input type="submit" value="remove user">
+                </form> </li> </li>
+            </c:forEach>
+
+        </ul>
     </ul>
-<tr>
-    <th> <button type="button">log out</button> </th>
-</tr>
+    <a href="/login">log out</a>
 </body>
 </html>
