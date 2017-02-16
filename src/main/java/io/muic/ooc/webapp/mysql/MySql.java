@@ -1,6 +1,7 @@
 package io.muic.ooc.webapp.mysql;
 
 
+        import io.muic.ooc.webapp.service.Encryption;
         import org.apache.commons.lang.StringUtils;
 
         import java.sql.*;
@@ -44,10 +45,11 @@ public class MySql{
 
 
     public boolean validateLogin(String username,String password) throws  Exception {
+        resultSet =statement.executeQuery("select * from users");
         while (resultSet.next()) {
             String existingUserName = resultSet.getString("username");
             String existingPassword = resultSet.getString("password");
-            if (existingUserName.equals(username) && existingPassword.equals(password)) {
+            if (existingUserName.equals(username) && Encryption.checkPassword(password, existingPassword)) {
                 resultSet.beforeFirst();
                 return true;
             }
@@ -64,8 +66,9 @@ public class MySql{
     }
 
     public boolean addUser(String username, String password) throws Exception {
+        String encryptedPassword = Encryption.hashPassword(password).toString();
+        String sql = "insert into test.users values ('"+username+"','"+encryptedPassword+"','0')";
 
-        String sql = "insert into test.users values ('"+username+"','"+password+"','0')";
         preparedStatement = this.connection.prepareStatement(sql);
         preparedStatement.executeUpdate();
         return true;
@@ -76,14 +79,11 @@ public class MySql{
         preparedStatement.executeUpdate();
     }
     public ArrayList<String> displayUsers()  throws Exception{
-
         ArrayList<String> userNameLists= new ArrayList<>();
         while (resultSet.next()) {
             String existingUserName = resultSet.getString("username");
             userNameLists.add(existingUserName);
             System.out.println(resultSet.getString("username"));
-            //System.out.println(resultSet.getString("password"));
-            //System.out.println(resultSet.getString("session") == null ? "NULL" : resultSet.getString("session"));
             System.out.println();
         }
         return userNameLists;

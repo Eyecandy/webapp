@@ -7,6 +7,7 @@ package io.muic.ooc.webapp.servlet;
 
 import io.muic.ooc.webapp.mysql.MyJspHelper;
 import io.muic.ooc.webapp.mysql.MySql;
+import io.muic.ooc.webapp.service.Encryption;
 import io.muic.ooc.webapp.service.SecurityService;
 import org.apache.commons.lang.StringUtils;
 
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 
 
 public class UserServlet extends HttpServlet {
-
+    Encryption encryption;
     private SecurityService securityService;
     String message;
     MySql mysql = new MySql();
@@ -63,7 +64,9 @@ public class UserServlet extends HttpServlet {
                     RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/addUser.jsp");
                     rd.include(req, resp);
                 } else {
+
                     mysql.addUser(username, password);
+
                     resp.sendRedirect("/index.jsp");
                 }
 
@@ -76,6 +79,6 @@ public class UserServlet extends HttpServlet {
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
-
+    public void setEncryption(Encryption encryption) {this.encryption =encryption;}
 
 }

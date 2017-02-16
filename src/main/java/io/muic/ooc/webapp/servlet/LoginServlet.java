@@ -5,6 +5,7 @@
  */
 package io.muic.ooc.webapp.servlet;
 
+import io.muic.ooc.webapp.service.Encryption;
 import io.muic.ooc.webapp.service.SecurityService;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import org.apache.commons.lang.StringUtils;
  * @author gigadot
  */
 public class LoginServlet extends HttpServlet {
-
+    Encryption encryption;
     private SecurityService securityService;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -33,6 +34,7 @@ public class LoginServlet extends HttpServlet {
         try {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+
             if (!StringUtils.isBlank(username) && !StringUtils.isBlank(password)) {
                 if (securityService.authenticate(username, password, request)) {
                     response.sendRedirect("/");
@@ -57,5 +59,5 @@ public class LoginServlet extends HttpServlet {
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
-
+    public void setEncryption(Encryption encryption) {this.encryption =encryption;}
 }
