@@ -11,8 +11,8 @@
 <h2>UserList </h2>
 <p>${info}</p>
 
-    <a href="/addUser">addUser</a>
-    <a href="/editUser">editU ser</a>
+    <a href="/addUser">add User</a>
+    <a href="/editUser">edit User</a>
     <ul>
         <ul>
             <c:forEach items="${myMap}" var="value">
@@ -24,6 +24,6 @@
 
         </ul>
     </ul>
-    <a href="/login">log out</a>
+    <a href="/logout">log out</a>
 </body>
 </html>

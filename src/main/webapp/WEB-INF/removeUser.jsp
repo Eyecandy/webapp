@@ -7,10 +7,6 @@
 
              <input type="hidden" name="username" value="${username}">
             <input type="submit" name="buttonClicked" value="No">
-
         </form>
-
-
-
     </div>
 </div>

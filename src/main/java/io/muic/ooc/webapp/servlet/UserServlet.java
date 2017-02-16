@@ -24,11 +24,20 @@ public class UserServlet extends HttpServlet {
     private SecurityService securityService;
     String message;
     MySql mysql = new MySql();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/addUser.jsp");
-        rd.include(req, resp);
+        try {
+            if (securityService.isAuthorized(req)) {
+            RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/addUser.jsp");
+            rd.include(req, resp);}
+            else {
+                resp.sendRedirect("/login");
+            }
+        } catch (Exception e) {
+        }
     }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
@@ -38,14 +47,13 @@ public class UserServlet extends HttpServlet {
             req.setAttribute("info", message);
             RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/addUser.jsp");
             rd.include(req, resp);
-        }
-        else {
+        } else {
             try {
                 boolean userNameExist = false;
                 ArrayList<String> resultSet = MyJspHelper.getResultSetAsArray();
-                for (int i =0;i < resultSet.size();i++) {
-                    String userFromDB= resultSet.get(i);
-                    if (StringUtils.equals(username.toLowerCase(),userFromDB.toLowerCase())) {
+                for (int i = 0; i < resultSet.size(); i++) {
+                    String userFromDB = resultSet.get(i);
+                    if (StringUtils.equals(username.toLowerCase(), userFromDB.toLowerCase())) {
                         userNameExist = true;
                     }
                 }
@@ -54,9 +62,8 @@ public class UserServlet extends HttpServlet {
                     req.setAttribute("error", message);
                     RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/addUser.jsp");
                     rd.include(req, resp);
-                }
-                else {
-                    mysql.addUser(username,password);
+                } else {
+                    mysql.addUser(username, password);
                     resp.sendRedirect("/index.jsp");
                 }
 
@@ -65,9 +72,10 @@ public class UserServlet extends HttpServlet {
             }
         }
     }
+
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
 
-    
+
 }

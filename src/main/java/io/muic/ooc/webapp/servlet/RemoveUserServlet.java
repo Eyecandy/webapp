@@ -19,28 +19,42 @@ public class RemoveUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/removeUser.jsp");
-        String username = req.getParameter("username");
-        req.setAttribute("username",username);
-        String msg = "Are you sure you want to delete " + username + "?";
-        req.setAttribute("msg", msg);
-        rd.include(req, resp);
+        try {
+            if (securityService.isAuthorized(req)) {
+                RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/removeUser.jsp");
+                String username = req.getParameter("username");
+                req.setAttribute("username", username);
+                String msg = "Are you sure you want to delete " + username + "?";
+                req.setAttribute("msg", msg);
+                rd.include(req, resp);
+            } else {
+                resp.sendRedirect("/login");
+
+            }
+
+        } catch (Exception e) {
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String buttonClicked = req.getParameter("buttonClicked");
-        if (StringUtils.equals("Yes",buttonClicked)) {
+        if (StringUtils.equals("Yes", buttonClicked)) {
             String currUser = (String) req.getSession().getAttribute("username");
             String username = req.getParameter("username");
-            if (!StringUtils.equals(currUser,username)) {
+            if (!StringUtils.equals(currUser, username)) {
                 MySql mysql = new MySql();
-                try { mysql.removeUser(username);}
-                catch (Exception e) {}
+                try {
+                        mysql.removeUser(username);
+                } catch (Exception e) {
+                }
             }
         }
         resp.sendRedirect("/");
+
     }
+
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }

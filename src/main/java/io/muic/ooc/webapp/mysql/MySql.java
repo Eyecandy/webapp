@@ -62,11 +62,7 @@ public class MySql{
         preparedStatement = connection.prepareStatement(sql);
         preparedStatement.executeUpdate();
     }
-    public void removeSession(String username) throws  Exception {
-        String sql = "UPDATE test.users set session=0 where username="+"'"+username+"'";
-        preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.executeUpdate();
-    }
+
     public boolean addUser(String username, String password) throws Exception {
 
         String sql = "insert into test.users values ('"+username+"','"+password+"','0')";

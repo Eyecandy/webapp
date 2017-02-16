@@ -40,6 +40,7 @@ public class SecurityService {
 
     
     public void logout(HttpServletRequest request) {
+        System.out.println("Log out");
         request.getSession().invalidate();
     }
     

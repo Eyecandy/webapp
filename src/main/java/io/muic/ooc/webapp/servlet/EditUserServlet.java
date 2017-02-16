@@ -21,8 +21,15 @@ public class EditUserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/editUser.jsp");
-        rd.include(req, resp);
+        try {
+            if (securityService.isAuthorized(req)) {
+                RequestDispatcher rd = req.getRequestDispatcher("WEB-INF/editUser.jsp");
+                rd.include(req, resp);
+            } else {
+                resp.sendRedirect("/login");
+            }
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -30,14 +37,13 @@ public class EditUserServlet extends HttpServlet {
 
         MySql mySql = new MySql();
         try {
-
             String oldUserName = req.getParameter("current username");
-            String  newUserName= req.getParameter("new username");
+            String newUserName = req.getParameter("new username");
             String currUser = (String) req.getSession().getAttribute("username");
             ResultSet resultSet = MyJspHelper.getResultSet();
             boolean oldUserNameExist = false;
             boolean newUserNameExist = false;
-            if (!StringUtils.equals(currUser.toLowerCase(),oldUserName.toLowerCase())) {
+            if (!StringUtils.equals(currUser.toLowerCase(), oldUserName.toLowerCase())) {
                 while (resultSet.next()) {
                     String usernameInDb = resultSet.getString("username");
                     if (StringUtils.equals(usernameInDb.toLowerCase(), oldUserName.toLowerCase())) {
@@ -49,12 +55,16 @@ public class EditUserServlet extends HttpServlet {
                 }
 
                 if (oldUserNameExist && !newUserNameExist) {
-                    mySql.editUser(oldUserName.toLowerCase(),newUserName.toLowerCase());
+                    mySql.editUser(oldUserName.toLowerCase(), newUserName.toLowerCase());
                 }
             }
+            resp.sendRedirect("/");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e) {e.printStackTrace();}
-        resp.sendRedirect("/");
+
 
     }
 

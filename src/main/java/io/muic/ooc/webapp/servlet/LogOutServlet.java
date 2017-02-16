@@ -10,6 +10,7 @@ public class LogOutServlet extends HttpServlet {
     private SecurityService securityService;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("LOGOUT");
         securityService.logout(req);
         resp.sendRedirect("/login");
     }
