@@ -9,6 +9,7 @@ import io.muic.ooc.webapp.servlet.*;
 import io.muic.ooc.webapp.service.SecurityService;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.tomcat.util.descriptor.web.ErrorPage;
 
 /**
  *
@@ -29,6 +30,7 @@ public class ServletRouter {
         initLogOut(ctx);
         initRemoveUse(ctx);
         initEditUser(ctx);
+        initErrorServer(ctx);
     }
     private void initHome(Context ctx) {
         HomeServlet homeServlet = new HomeServlet();
@@ -68,5 +70,13 @@ public class ServletRouter {
         Tomcat.addServlet(ctx,"EditUserServlet",editUserServlet);
         ctx.addServletMapping("/editUser","EditUserServlet");
     }
+    private void initErrorServer(Context ctx){
+        ErrorPage errorPage = new ErrorPage();
+        errorPage.setErrorCode(404);
+        errorPage.setLocation("/index.jsp");
+        ctx.addErrorPage(errorPage);
+
+    }
+
 
 }

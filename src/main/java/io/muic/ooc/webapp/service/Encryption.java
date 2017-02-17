@@ -49,26 +49,19 @@ public class Encryption {
         return (password_verified);
     }
 
-
     public static void main(String[] args) {
         String test_passwd = "emmie";
 
-
         System.out.println("Test password: " + test_passwd);
-
-
 
         String computed_hash = hashPassword(test_passwd);
 
         System.out.println("Test computed hash: " + computed_hash);
 
-
         String compare_computed = checkPassword(test_passwd, computed_hash)
                 ? "Passwords Match" : "Passwords do not match";
 
-
         System.out.println("Verify against computed hash: " + compare_computed);
-
     }
 
 }
