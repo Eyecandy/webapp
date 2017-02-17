@@ -67,7 +67,7 @@ public class UserServlet extends HttpServlet {
 
                     mysql.addUser(username, password);
 
-                    resp.sendRedirect("/index.jsp");
+                    resp.sendRedirect("/");
                 }
 
             } catch (Exception e) {
